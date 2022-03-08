@@ -1,10 +1,9 @@
-package com.rezzavinola.dogapplication.network
+package com.rezzavinola.dogapplication.data.remote
 
-import com.rezzavinola.dogapplication.model.network.search.SearchResponse
+import com.rezzavinola.dogapplication.data.model.response.search.SearchResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 
 interface ApiService {
 

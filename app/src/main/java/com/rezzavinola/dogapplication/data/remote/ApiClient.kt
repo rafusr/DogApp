@@ -1,10 +1,9 @@
-package com.rezzavinola.dogapplication.network
+package com.rezzavinola.dogapplication.data.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 object ApiClient {
 

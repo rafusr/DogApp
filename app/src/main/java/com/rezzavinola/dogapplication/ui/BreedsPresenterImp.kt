@@ -1,7 +1,7 @@
 package com.rezzavinola.dogapplication.ui
 
-import com.rezzavinola.dogapplication.model.network.search.SearchResponse
-import com.rezzavinola.dogapplication.network.ApiClient
+import com.rezzavinola.dogapplication.data.model.response.search.SearchResponse
+import com.rezzavinola.dogapplication.data.remote.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,6 +9,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/*
+    This Class will no longer used after we
+    moved the architectures to MVVM
+*/
 
 class BreedsPresenterImp(
     private val view: BreedsView,

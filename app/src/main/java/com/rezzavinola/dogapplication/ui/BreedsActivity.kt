@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.rezzavinola.dogapplication.adapter.BreedsAdapter
 import com.rezzavinola.dogapplication.databinding.ActivityBreedsBinding
 import com.rezzavinola.dogapplication.dialog.CustomLoadingDialog
-import com.rezzavinola.dogapplication.model.network.search.SearchResponse
+import com.rezzavinola.dogapplication.data.model.response.search.SearchResponse
 import kotlinx.coroutines.GlobalScope
 
 class BreedsActivity : AppCompatActivity(), BreedsView {

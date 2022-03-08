@@ -1,7 +1,6 @@
-package com.rezzavinola.dogapplication.model.network.search
+package com.rezzavinola.dogapplication.data.model.response.search
 
 import com.google.gson.annotations.SerializedName
-
 
 data class SearchResponseItem(
     @SerializedName("breeds")

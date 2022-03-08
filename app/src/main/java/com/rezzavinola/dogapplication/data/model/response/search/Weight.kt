@@ -1,8 +1,8 @@
-package com.rezzavinola.dogapplication.model.network.search
+package com.rezzavinola.dogapplication.data.model.response.search
 
 import com.google.gson.annotations.SerializedName
 
-data class Height(
+data class Weight(
     @SerializedName("imperial")
     val imperial: String,
     @SerializedName("metric")

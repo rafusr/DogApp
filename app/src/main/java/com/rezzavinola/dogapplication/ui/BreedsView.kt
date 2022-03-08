@@ -1,7 +1,7 @@
 package com.rezzavinola.dogapplication.ui
 
 import com.rezzavinola.dogapplication.BaseView
-import com.rezzavinola.dogapplication.model.network.search.SearchResponse
+import com.rezzavinola.dogapplication.data.model.response.search.SearchResponse
 
 interface BreedsView: BaseView {
 
