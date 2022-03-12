@@ -1,21 +1,24 @@
 package com.rezzavinola.dogapplication.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.rezzavinola.dogapplication.ViewModelFactory
 import com.rezzavinola.dogapplication.adapter.BreedsAdapter
+import com.rezzavinola.dogapplication.data.DogsRepository
 import com.rezzavinola.dogapplication.databinding.ActivityBreedsBinding
 import com.rezzavinola.dogapplication.dialog.CustomLoadingDialog
-import com.rezzavinola.dogapplication.data.model.response.search.SearchResponse
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class BreedsActivity : AppCompatActivity(), BreedsView {
+class BreedsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBreedsBinding
     private lateinit var customLoading: CustomLoadingDialog
-    private var presenter: BreedsPresenterImp? = null
-    private var breedsAdapter: BreedsAdapter? = null
+    private lateinit var repository: DogsRepository
+    private lateinit var viewModel: BreedsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,39 +26,33 @@ class BreedsActivity : AppCompatActivity(), BreedsView {
         setContentView(binding.root)
 
         customLoading = CustomLoadingDialog(this)
-        presenter = BreedsPresenterImp(this, GlobalScope)
-
-        refreshDogs()
+        repository = DogsRepository(this)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(repository)
+        )[BreedsViewModel::class.java]
 
         binding.btnRefresh.setOnClickListener {
-            refreshDogs()
+            setupViewModel()
         }
 
+        setupViewModel()
     }
 
-    override fun showDogs(dogs: SearchResponse) {
-        breedsAdapter = BreedsAdapter(dogs)
-        runOnUiThread {
+    private fun setupViewModel() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            viewModel.fetchDogs()
+        }
+
+        viewModel.isLoading.observe(this) {
+            if (it) customLoading.show() else customLoading.dismiss()
+        }
+
+        viewModel.dogs.observe(this) {
             binding.recyclerDogs.apply {
-                layoutManager = GridLayoutManager(context, 3)
-                adapter = breedsAdapter
+                layoutManager = GridLayoutManager(this@BreedsActivity, 3)
+                adapter = BreedsAdapter(it)
             }
         }
-    }
-
-    override fun refreshDogs() {
-        presenter?.getDog()
-    }
-
-    override fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun showLoading() {
-        customLoading.show()
-    }
-
-    override fun hideLoading() {
-        customLoading.dismiss()
     }
 }
