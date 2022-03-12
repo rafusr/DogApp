@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
 import com.rezzavinola.dogapplication.databinding.ItemDogBinding
-import com.rezzavinola.dogapplication.data.model.response.search.SearchResponseItem
 
 class BreedsAdapter(
-    private var dogs: List<SearchResponseItem>,
+    private var dogs: List<DogsEntity>,
 ) : RecyclerView.Adapter<BreedsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemDogBinding) :
@@ -24,8 +24,8 @@ class BreedsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dog = dogs[position]
         holder.binding.root.context.let {
-            Glide.with(holder.binding.imgDog.context)
-                .load(dog.url)
+            Glide.with(it)
+                .load(dog.imageUrl)
                 .into(holder.binding.imgDog)
         }
     }
