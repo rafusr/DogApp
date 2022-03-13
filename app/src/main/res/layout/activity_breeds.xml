@@ -11,7 +11,7 @@
         android:layout_width="@dimen/_0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_20dp"
-        android:text="refresh"
+        android:text="@string/refresh"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:icon="@drawable/ic_refresh"
