@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.rezzavinola.dogapplication.R
 import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
 import com.rezzavinola.dogapplication.databinding.ItemDogBinding
 
@@ -26,6 +27,7 @@ class BreedsAdapter(
         holder.binding.root.context.let {
             Glide.with(it)
                 .load(dog.imageUrl)
+                .placeholder(R.drawable.img_dog)
                 .into(holder.binding.imgDog)
         }
     }

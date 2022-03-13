@@ -7,20 +7,14 @@
     app:cardElevation="@dimen/_10dp"
     app:cardUseCompatPadding="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/imgDog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imgDog"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:contentDescription="@string/dogs"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="160dp"
+        android:contentDescription="@string/dogs"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_dog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.cardview.widget.CardView>
