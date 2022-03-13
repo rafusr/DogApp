@@ -3,13 +3,13 @@ package com.rezzavinola.dogapplication.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
-import retrofit2.http.Query
 
 @Dao
 interface DogsDao {
 
-    @Query("select * from dogs")
+    @Query("SELECT * FROM dogs")
     fun getAllDogs(): List<DogsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
