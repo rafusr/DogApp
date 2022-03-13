@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
 
-
 @Database(entities = [DogsEntity::class], version = 1)
 abstract class DogsDatabase : RoomDatabase() {
 

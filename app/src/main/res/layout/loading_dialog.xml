@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/_12dp"
-                    android:text="loading"
+                    android:text="@string/loading"
                     android:textSize="@dimen/_16sp" />
 
             </LinearLayout>
