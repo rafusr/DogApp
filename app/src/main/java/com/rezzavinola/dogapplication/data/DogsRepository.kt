@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DogsRepository(context: Context) {
+
+    val destroyInstanceDatabase = DogsDatabase.destroyInstance()
     private val retrofit = ApiClient.instance
     private val database = DogsDatabase.instance(context)
 
@@ -29,10 +31,10 @@ class DogsRepository(context: Context) {
                         )
                     }
 
-                    database.dogsDao().insertAllDogs(listDogs)
+                    database.dogs().insertAllDogs(listDogs)
                 }
 
-                val dogsFromDb = database.dogsDao().getAllDogs()
+                val dogsFromDb = database.dogs().getAllDogs()
                 result.addAll(dogsFromDb)
             } catch (e: Exception) {
                 Log.d("Exception", e.message.toString())
