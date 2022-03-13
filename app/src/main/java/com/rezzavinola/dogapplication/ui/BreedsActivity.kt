@@ -55,4 +55,9 @@ class BreedsActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        repository.destroyInstanceDatabase
+    }
 }
