@@ -9,7 +9,7 @@ import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
 @Dao
 interface DogsDao {
 
-    @Query("SELECT * FROM dogs")
+    @Query("SELECT * FROM dogs ORDER BY id DESC")
     fun getAllDogs(): List<DogsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
