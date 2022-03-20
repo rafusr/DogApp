@@ -6,11 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rezzavinola.dogapplication.data.DogsRepository
 import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BreedsViewModel(private val repository: DogsRepository) : ViewModel() {
+@HiltViewModel
+class BreedsViewModel @Inject constructor(
+    private val dogsRepository: DogsRepository,
+    private val ioDispatcher: CoroutineDispatcher
+) : ViewModel() {
 
     private val _dogs = MutableLiveData<List<DogsEntity>>()
     val dogs: LiveData<List<DogsEntity>> = _dogs
@@ -19,13 +27,11 @@ class BreedsViewModel(private val repository: DogsRepository) : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
     suspend fun fetchDogs() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getAllDogs()
-            _dogs.postValue(result)
-            withContext(Dispatchers.Main) {
-                _isLoading.value = false
-            }
+        viewModelScope.launch(ioDispatcher) {
+            dogsRepository.getAllDogs()
+                .onStart { _isLoading.postValue(true) }
+                .onCompletion { _isLoading.postValue(false) }
+                .collect { _dogs.postValue(it) }
         }
     }
 }
