@@ -1,45 +1,38 @@
 package com.rezzavinola.dogapplication.data
 
-import android.content.Context
 import android.util.Log
-import com.rezzavinola.dogapplication.data.local.DogsDatabase
+import com.rezzavinola.dogapplication.data.local.DogsDao
 import com.rezzavinola.dogapplication.data.model.entity.DogsEntity
-import com.rezzavinola.dogapplication.data.remote.ApiClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.rezzavinola.dogapplication.data.remote.ApiService
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.suspendOnSuccess
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
-class DogsRepository(context: Context) {
+class DogsRepository @Inject constructor(
+    private val apiService: ApiService,
+    private val dogsDao: DogsDao,
+    private val ioDispatcher: CoroutineDispatcher
+) {
 
-    val destroyInstanceDatabase = DogsDatabase.destroyInstance()
-    private val retrofit = ApiClient.instance
-    private val database = DogsDatabase.instance(context)
-
-    suspend fun getAllDogs(): List<DogsEntity> {
-        val result = ArrayList<DogsEntity>()
-        withContext(Dispatchers.IO) {
-            try {
-                val searchImages = retrofit.searchImages(limit = 30)
-                if (searchImages.isSuccessful) {
-                    val dogsResponse = searchImages.body()!!
-                    val listDogs = ArrayList<DogsEntity>()
-
-                    dogsResponse.forEach {
-                        listDogs.add(
-                            DogsEntity(
-                                imageUrl = it.url
-                            )
-                        )
-                    }
-
-                    database.dogs().insertAllDogs(listDogs)
-                }
-
-                val dogsFromDb = database.dogs().getAllDogs()
-                result.addAll(dogsFromDb)
-            } catch (e: Exception) {
-                Log.d("Exception", e.message.toString())
+    suspend fun getAllDogs() = flow {
+        val searchImages = apiService.searchImages(limit = 20)
+        searchImages.suspendOnSuccess {
+            val result = ArrayList<DogsEntity>()
+            data.forEach { item ->
+                result.add(DogsEntity(imageUrl = item.url))
             }
-        }
-        return result
-    }
+            dogsDao.insertAllDogs(result)
+
+        }.onError { Log.i("On Error", message()) }
+            .onException { Log.i("On Exception", message.toString()) }
+
+        val localDogs = dogsDao.getAllDogs()
+        emit(localDogs)
+
+    }.flowOn(ioDispatcher)
 }

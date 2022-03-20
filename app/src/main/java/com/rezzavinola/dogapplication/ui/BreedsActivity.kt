@@ -1,24 +1,23 @@
 package com.rezzavinola.dogapplication.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.rezzavinola.dogapplication.ViewModelFactory
 import com.rezzavinola.dogapplication.adapter.BreedsAdapter
-import com.rezzavinola.dogapplication.data.DogsRepository
 import com.rezzavinola.dogapplication.databinding.ActivityBreedsBinding
 import com.rezzavinola.dogapplication.dialog.CustomLoadingDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class BreedsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBreedsBinding
     private lateinit var customLoading: CustomLoadingDialog
-    private lateinit var repository: DogsRepository
-    private lateinit var viewModel: BreedsViewModel
+    private val viewModel by viewModels<BreedsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,20 +25,12 @@ class BreedsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         customLoading = CustomLoadingDialog(this)
-        repository = DogsRepository(this)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(repository)
-        )[BreedsViewModel::class.java]
 
-        binding.btnRefresh.setOnClickListener {
-            setupViewModel()
-        }
-
-        setupViewModel()
+        binding.btnRefresh.setOnClickListener { setupObserver() }
+        setupObserver()
     }
 
-    private fun setupViewModel() {
+    private fun setupObserver() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.fetchDogs()
         }
@@ -54,10 +45,5 @@ class BreedsActivity : AppCompatActivity() {
                 adapter = BreedsAdapter(it)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        repository.destroyInstanceDatabase
     }
 }
