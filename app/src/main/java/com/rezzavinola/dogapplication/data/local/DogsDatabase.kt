@@ -26,9 +26,5 @@ abstract class DogsDatabase : RoomDatabase() {
             }
             return database!!
         }
-
-        fun destroyInstance() {
-            database = null
-        }
     }
 }
